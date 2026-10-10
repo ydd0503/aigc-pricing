@@ -14,7 +14,7 @@ GitHub Pages 配置完成后： https://ydd0503.github.io/aigc-pricing/
 
 ## 部署到服务器
 
-本仓库就是可交付静态站点，不需要原项目的本地档案。把 index.html 和 data-version.json 上传到 Nginx 网页目录即可；需要提供公开数据下载时同时上传 data 目录。也可以在静态托管平台选择无框架、不执行构建、输出目录为仓库根目录。
+本仓库就是可交付静态站点，不需要原项目的本地档案。把 index.html、data-version.json、LICENSE 和 repository-stats.json 上传到 Nginx 网页目录即可；需要提供公开数据下载时同时上传 data 目录。也可以在静态托管平台选择无框架、不执行构建、输出目录为仓库根目录。
 
 GitHub Pages 使用仓库内的自动部署流程；在 Settings → Pages 将部署来源设为 GitHub Actions。
 
@@ -37,6 +37,12 @@ GitHub Pages 使用仓库内的自动部署流程；在 Settings → Pages 将�
 
 - 核对 O1 官方模式规格：RunningHub 23 条保存 `mode=std` 的记录明确对应 720P，已加入同分辨率跨平台比较；保留原积分与采集时间，未补造 1080P 报价。LibTV 的标准／高品质尚无明确像素映射，继续保留原始档位。
 - 严格按所选规格筛选；图表列出未显示平台及原因，平台选择标为“对比平台”。
+
+## GitHub Star 统计
+
+Star 读取 GitHub 官方 `stargazers_count`。页面先显示已核对的公开数量，再独立请求实时值；网络失败、离线打开或浏览器存储被禁用时仍显示最近核对记录，悬停可查看核对时间。缓存不会阻止实时刷新。
+
+GitHub Pages 每次发布及每小时尝试更新 repository-stats.json 和页面内的备用数字；调度可能延迟，长期不活动的公开仓库可能暂停定时任务。下载版保留下载时的核对记录，有网络时仍尝试读取实时值。公开脚本 scripts/refresh_repository_stats.mjs 只读取 GitHub 仓库元数据，不包含任何视频平台采集或账户访问。工作流的临时 GitHub 令牌只在服务端用于读取本仓库元数据，输出仅保留仓库名、数量和核对时间。
 
 ## 许可
 

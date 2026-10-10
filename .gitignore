@@ -1,3 +1,16 @@
 site/
 node_modules/
 *.tmp
+.local/
+.env
+.env.*
+!.env.example
+data/official/
+output/
+*browser-profile*/
+*.har
+*.log
+*.db
+*.sqlite*
+*.pem
+*.key
