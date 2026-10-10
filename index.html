@@ -1,3 +1,26 @@
+<!--
+MIT License
+
+Copyright (c) 2026 ydd0503
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AIGC pricing · AI视频生成平台统一度量衡</title>
 <style>
@@ -60,7 +83,7 @@ main{max-width:1480px;padding-top:24px}
 #data-freshness-note{background:#fff8e8!important;color:#74521a!important;border-color:#e5d5ad!important}
 .control select,.chart-toolbar select,.chart-toolbar input{background:#fff;border-color:#ccd2df;color:var(--ui-ink);border-radius:9px}
 button,input,select,summary{font:inherit}
-button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--ui-focus);outline-offset:3px}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,a.header-action:focus-visible{outline:3px solid var(--ui-focus);outline-offset:3px}
 button:disabled{cursor:not-allowed}
 input[type=checkbox]{accent-color:var(--ui-accent);width:16px;height:16px;vertical-align:middle;margin-right:6px}
 .coupon-control label{display:flex;align-items:flex-start;gap:4px;line-height:1.5;font-size:12px}
@@ -69,7 +92,8 @@ input[type=checkbox]{accent-color:var(--ui-accent);width:16px;height:16px;vertic
 .site-header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.97);border-bottom:1px solid var(--ui-border)}
 .site-header-inner{display:flex;align-items:center;gap:36px;max-width:1480px;margin:auto;padding:0 clamp(16px,3vw,42px);min-height:68px}
 .site-actions{margin-left:auto;display:flex;gap:5px;align-items:center;white-space:nowrap}
-.header-action{border:1px solid transparent;background:transparent;color:var(--ui-muted);font-size:12px;padding:7px 9px;border-radius:7px;cursor:pointer}
+.header-action{display:inline-flex;align-items:center;gap:5px;border:1px solid transparent;background:transparent;color:var(--ui-muted);font-size:12px;padding:7px 9px;border-radius:7px;cursor:pointer;text-decoration:none;line-height:1.2}
+.header-action svg{width:14px;height:14px;flex:none}.github-star-count{font-variant-numeric:tabular-nums}.github-star-count[hidden]{display:none}
 .header-action:hover:not(:disabled){background:var(--ui-accent-tint);color:var(--ui-accent)}
 .header-action:disabled{opacity:.65;cursor:default}
 :root[data-theme=dark]{color-scheme:dark;--ui-bg:#151923;--ui-surface:#1d2330;--ui-ink:#e6e9f2;--ui-muted:#abb5cb;--ui-border:#343e53;--ui-accent:#a6b5ff;--ui-accent-tint:#2a3350;--ui-focus:#a6b5ff;--metric-cost:#a6b5ff;--metric-credit:#75d1b5;--metric-usage:#e6be80}
@@ -193,7 +217,7 @@ thead th.value-usage{color:var(--metric-usage);border-bottom-color:var(--metric-
 @media(max-width:600px){.hero{padding:22px 0 24px;margin-bottom:18px;gap:22px}.hero h1{font-size:30px;line-height:1.35;max-width:520px}.hero p,.hero p.hero-formula{font-size:15px}.hero p.hero-support{font-size:13px}.hero-stats{gap:16px;margin:0;max-width:100%;overflow-x:auto;padding-bottom:4px}.hero-stats dd{font-size:19px}.hero-stats dd.hero-stat-date{font-size:15px}.site-brand{font-size:18px}.site-brand-icon{width:26px;height:26px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 </style></head><body>
-<header class="site-header"><div class="site-header-inner"><span class="site-brand"><svg class="site-brand-icon" viewBox="0 0 32 32" aria-hidden="true"><rect x="5" y="7" width="7" height="18" rx="2" fill="currentColor" opacity=".45"/><rect x="20" y="14" width="7" height="11" rx="2" fill="currentColor"/><path d="M14 10h11m-3-3 3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>AIGC <span class="site-brand-pricing">pricing</span></span><span class="site-brand-caption">跨平台比价</span></span><nav id="page-navigation" class="page-tabs" role="tablist" aria-label="页面内容"><button id="page-tab-comparison" class="page-tab active" type="button" role="tab" aria-selected="true" aria-controls="page-panel-comparison">数据探索</button><button id="page-tab-supplementary" class="page-tab" type="button" role="tab" aria-selected="false" aria-controls="page-panel-supplementary" tabindex="-1">补充套餐</button><button id="page-tab-sources" class="page-tab" type="button" role="tab" aria-selected="false" aria-controls="page-panel-sources" tabindex="-1">方法与来源</button></nav><div class="site-actions"><button type="button" class="header-action" disabled title="补充数据入口即将开放">补充数据 ↗</button><button type="button" class="header-action" disabled title="GitHub 地址待补充">☆ Star</button><button type="button" class="header-action" id="theme-toggle" aria-label="切换深色模式" aria-pressed="false">☾ 深色</button><button type="button" class="header-action" disabled title="English 版本即将开放">EN</button><button type="button" class="header-action" disabled title="GitHub 地址待补充">GitHub ↗</button></div></div></header>
+<header class="site-header"><div class="site-header-inner"><span class="site-brand"><svg class="site-brand-icon" viewBox="0 0 32 32" aria-hidden="true"><rect x="5" y="7" width="7" height="18" rx="2" fill="currentColor" opacity=".45"/><rect x="20" y="14" width="7" height="11" rx="2" fill="currentColor"/><path d="M14 10h11m-3-3 3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>AIGC <span class="site-brand-pricing">pricing</span></span><span class="site-brand-caption">跨平台比价</span></span><nav id="page-navigation" class="page-tabs" role="tablist" aria-label="页面内容"><button id="page-tab-comparison" class="page-tab active" type="button" role="tab" aria-selected="true" aria-controls="page-panel-comparison">数据探索</button><button id="page-tab-supplementary" class="page-tab" type="button" role="tab" aria-selected="false" aria-controls="page-panel-supplementary" tabindex="-1">补充套餐</button><button id="page-tab-sources" class="page-tab" type="button" role="tab" aria-selected="false" aria-controls="page-panel-sources" tabindex="-1">方法与来源</button></nav><div class="site-actions"><a class="header-action" href="https://github.com/ydd0503/aigc-pricing/issues/new?template=contribute-data.md&amp;title=%5B%E8%A1%A5%E5%85%85%E6%95%B0%E6%8D%AE%5D%20%E5%B9%B3%E5%8F%B0%20%2F%20%E6%A8%A1%E5%9E%8B%E6%88%96%E6%8E%A5%E5%8F%A3" target="_blank" rel="noopener noreferrer" title="推荐报价接口或补充可核验的数据">补充数据 ↗</a><a class="header-action" id="github-star-link" href="https://github.com/ydd0503/aigc-pricing" target="_blank" rel="noopener noreferrer" aria-label="在 GitHub 上为 AIGC pricing 加 Star" title="在 GitHub 上加 Star"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.8 5.7 6.3.9-4.6 4.4 1.1 6.3-5.6-3-5.6 3 1.1-6.3L2.9 9.6l6.3-.9Z"/></svg><span>Star</span><span class="github-star-count" id="github-star-count" hidden></span></a><button type="button" class="header-action" id="theme-toggle" aria-label="切换深色模式" aria-pressed="false">☾ 深色</button><a class="header-action" href="https://github.com/ydd0503/aigc-pricing" target="_blank" rel="noopener noreferrer" title="查看 AIGC pricing 公开仓库">GitHub ↗</a></div></div></header>
 <main>
 <section class="hero"><div class="hero-copy"><h1>AI视频生成平台<span class="hero-emphasis">统一度量衡</span></h1><p class="hero-formula"><span class="formula-cost">每秒生成成本</span><span class="formula-operator"> = </span><span class="formula-credit">套餐每积分价格</span><span class="formula-operator"> × </span><span class="formula-usage">模型每秒积分消耗</span></p><p class="hero-support"><span class="formula-credit">套餐每积分价格</span> = 实付金额 ÷ 周期可用积分。选定同一模型和规格，统一比较每秒成本与可生成时长。</p></div><dl class="hero-stats" aria-label="数据覆盖范围"><div><dt>对比平台</dt><dd>6<span> 个</span></dd></div><div><dt>视频模型</dt><dd>73<span> 个</span></dd></div><div title="实际可计算的套餐与模型组合；同一组合的生成模式、分辨率和画幅去重统计，不含单列的团队席位参考和未报价组合。"><dt>套餐 × 模型</dt><dd>4,690<span> 组</span></dd></div><div><dt>最近采集</dt><dd class="hero-stat-date">2026-10-10</dd></div></dl></section>
 <section class="controls"><div class="control primary"><label for="model">选择视频模型</label><select id="model"></select></div><div class="control"><label for="scenario">生成模式 / 参考素材</label><select id="scenario"></select></div><div class="control"><label for="plan">RunningHub 套餐</label><select id="plan"></select></div><div class="control"><label for="resolution">分辨率</label><select id="resolution"></select></div><div class="control"><label for="ratio">画幅</label><select id="ratio"></select></div></section>
@@ -1975,6 +1999,37 @@ modelEl.addEventListener('change',syncModels);scenarioEl.addEventListener('chang
   doc.addEventListener(eventName,event=>controllers.forEach(c=>{if(event.detail!==c.wrapper)c.close();}));
   return {refresh:()=>controllers.forEach(c=>c.refresh())};
 })(document);
+  void (async function installRepositoryStarCount(document, apiUrl) {
+  const count = document.querySelector('#github-star-count');
+  const link = document.querySelector('#github-star-link');
+  if (!count || !link) return;
+  const cacheKey = 'aigc-pricing:github-stars:v1';
+  const now = Date.now(), ttl = 6 * 60 * 60 * 1000;
+  const show = value => {
+    count.textContent = value.toLocaleString('zh-CN');
+    count.hidden = false;
+    link.setAttribute('aria-label', '在 GitHub 上为 AIGC pricing 加 Star，当前 ' + value + ' 个 Star');
+  };
+  try {
+    const cached = JSON.parse(localStorage.getItem(cacheKey));
+    if (Number.isSafeInteger(cached?.count) && cached.count >= 0
+      && Number.isFinite(cached.savedAt) && now >= cached.savedAt && now - cached.savedAt < ttl) {
+      show(cached.count); return;
+    }
+  } catch {}
+  try {
+    const response = await fetch(apiUrl, {
+      method: 'GET', credentials: 'omit', headers: { Accept: 'application/vnd.github+json' },
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!response.ok) return;
+    const data = await response.json();
+    if (data.full_name !== 'ydd0503/aigc-pricing'
+      || !Number.isSafeInteger(data.stargazers_count) || data.stargazers_count < 0) return;
+    show(data.stargazers_count);
+    try { localStorage.setItem(cacheKey, JSON.stringify({ count: data.stargazers_count, savedAt: now })); } catch {}
+  } catch {}
+})(document,"https://api.github.com/repos/ydd0503/aigc-pricing");
   render();
 })();
 </script></body></html>
