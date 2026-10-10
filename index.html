@@ -1040,13 +1040,31 @@ modelEl.addEventListener('change',syncModels);scenarioEl.addEventListener('chang
     const plan=DATA.planOptions.find(p=>p.id===planSelect.value);
     return native && native.platform===platformName(plan) && COMPARISON.getGroup(native.scenarioId)?.id===scenarioEl.value ? COMPARISON.quoteFor(native,native.platform,resolutionEl.value,ratioEl.value,native) ?? original : original;
   };
+  const comparisonQuoteEntryLabel=function comparisonQuoteEntryLabel(quote, siblings, presets) {
+  const preset = quote.generationVariant ?? 'default';
+  const base = preset === 'default' ? '常规通道' : presets[preset];
+  const peers = siblings.filter(item => (item.generationVariant ?? 'default') === preset);
+  if (peers.some(item => item.mode !== quote.mode)) {
+    const modes = { TEXT_VIDEO:'文生入口', MULTIMODAL_VIDEO:'参考入口', START_VIDEO:'首帧入口',
+      START_END_VIDEO:'首尾帧入口', VIDEO_EDIT:'编辑入口', VIDEO_EXTEND:'延长入口',
+      MULTI_FRAME_VIDEO:'多帧入口', LONG_VIDEO:'长视频入口' };
+    let entry = modes[quote.mode] ?? quote.modeName ?? base;
+    if (quote.mode === 'MULTIMODAL_VIDEO' && quote.referenceProfile === 'no-reference') entry += '（无素材）';
+    return preset === 'default' ? entry : base + ' · ' + entry;
+  }
+  return base;
+};
+  const chartPlanBundleLabel=function chartPlanBundleLabel(plan) {
+  if (plan.platform !== 'RunningHub') return '';
+  return plan.bundle === 'rh-heavy' ? 'RH币多' : plan.bundle === 'balance-heavy' ? '积分多' : '';
+};
   function comparisonRows(plans, anchor) {
     return plans.flatMap(plan=>{
       const quotes=anchor?COMPARISON.quotesFor(anchor,platformName(plan),anchor.resolution,anchor.ratio,anchor):[];
       if(!quotes.length)return [planPrice(plan,anchor)];
       return quotes.map(quote=>{
         const preset=quote.generationVariant ?? 'default';
-        const channel=preset==='default'?'常规通道':DATA.generationModeRegistry.presets[preset];
+        const channel=comparisonQuoteEntryLabel(quote,quotes,DATA.generationModeRegistry.presets);
         const name=quotes.length>1 || ['libtv-vip','jimeng-regular'].includes(preset) ? plan.planName+' · '+channel : plan.planName;
         return planPrice({...plan,planName:name,comparisonQuote:quote},anchor);
       });
@@ -1441,7 +1459,8 @@ modelEl.addEventListener('change',syncModels);scenarioEl.addEventListener('chang
     const labelEntries = labelRows.map(row => {
       const selected = row === selectedRow;
       const primary = (selected ? '当前 · ' : '') + row.plan.planName;
-      const secondary = termName(row.plan.term) + (efficiency ? ' · '+fmt(1/row.per)+' 秒/元' : ' · ¥' + fmt(row.per) + '/秒');
+      const bundleLabel = chartPlanBundleLabel(row.plan);
+      const secondary = termName(row.plan.term) + (bundleLabel ? ' · '+bundleLabel : '') + (efficiency ? ' · '+fmt(1/row.per)+'秒/元' : ' · ¥' + fmt(row.per) + '/秒');
       // Estimate CJK and Latin widths separately; truncate by available glyph width.
       const textWidth = text => Array.from(text).reduce((sum, char) => sum + (char.charCodeAt(0) > 255 ? 11 : 6), 0);
       const boxWidth = Math.min(200, Math.max(152, textWidth(primary) + 40, textWidth(secondary) + 40));
