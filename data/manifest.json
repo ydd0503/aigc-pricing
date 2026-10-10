@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "version": "b2bf339ad7b5ce29",
-  "generatedAt": "2026-10-10T12:45:36.247Z",
-  "sha256": "b2bf339ad7b5ce29bd00a38b0ba62ef4e62ae9d670812300f37c15995e711c33",
-  "dataset": "releases/b2bf339ad7b5ce29.json",
-  "release": "releases/b2bf339ad7b5ce29.json",
+  "version": "be155388613d0859",
+  "generatedAt": "2026-10-10T14:12:38.147Z",
+  "sha256": "be155388613d0859576245ecfbd453a17ca1b7c99190b2c1d8203fc94d41f6ba",
+  "dataset": "releases/be155388613d0859.json",
+  "release": "releases/be155388613d0859.json",
   "counts": {
     "publicPlatformCount": 6,
     "distinctModelChoices": 73,
