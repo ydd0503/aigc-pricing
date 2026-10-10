@@ -92,6 +92,7 @@ input[type=checkbox]{accent-color:var(--ui-accent);width:16px;height:16px;vertic
 .site-header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.97);border-bottom:1px solid var(--ui-border)}
 .site-header-inner{display:flex;align-items:center;gap:36px;max-width:1480px;margin:auto;padding:0 clamp(16px,3vw,42px);min-height:68px}
 .site-actions{margin-left:auto;display:flex;gap:5px;align-items:center;white-space:nowrap}
+.comparison-filter-note{margin:10px 0;padding:10px 12px;border:1px solid var(--ui-border);border-radius:9px;background:var(--ui-accent-tint);color:var(--ui-muted);font-size:12px;line-height:1.6}
 .header-action{display:inline-flex;align-items:center;gap:5px;border:1px solid transparent;background:transparent;color:var(--ui-muted);font-size:12px;padding:7px 9px;border-radius:7px;cursor:pointer;text-decoration:none;line-height:1.2}
 .header-action svg{width:14px;height:14px;flex:none}.github-star-count{font-variant-numeric:tabular-nums}.github-star-count[hidden]{display:none}
 .header-action:hover:not(:disabled){background:var(--ui-accent-tint);color:var(--ui-accent)}
@@ -503,7 +504,7 @@ modelEl.addEventListener('change',syncModels);scenarioEl.addEventListener('chang
 
   const platformControl = document.createElement('div');
   platformControl.className = 'control';
-  platformControl.innerHTML = '<label for="platform">计费平台</label><select id="platform"></select>';
+  platformControl.innerHTML = '<label for="platform">对比平台</label><select id="platform"></select>';
   planControl.parentElement.insertBefore(platformControl, scenarioControl);
   planControl.parentElement.insertBefore(planControl, scenarioControl);
   planControl.querySelector('label').textContent = '平台套餐';
@@ -826,6 +827,12 @@ modelEl.addEventListener('change',syncModels);scenarioEl.addEventListener('chang
   if (!source) {
     const native = catalog.quoteFor(anchor, platform, anchor.resolution, anchor.ratio, null, true);
     if (!native) {
+      const platformSources = group.sources.filter(s => (s.platform || 'RunningHub') === platform);
+      const nativeResolutions = platformSources.flatMap(s => s.resolutions ?? []);
+      const physicalResolution = value => /^(?:\d+p|\d+(?:\.\d+)?k|\d+\s*[x×]\s*\d+)$/i.test(String(value));
+      if (physicalResolution(anchor.resolution) && nativeResolutions.length
+        && nativeResolutions.every(r => !physicalResolution(r.value)))
+        return result('RESOLUTION_UNDECLARED', '该平台像素分辨率未确认，不能按当前 ' + anchor.resolution + ' 匹配');
       const sources = group.sources.filter(s => (s.platform || 'RunningHub') === platform
         && s.resolutions?.some(r => String(r.value).toLowerCase() === String(anchor.resolution).toLowerCase()));
       if (sources.length && sources.every(s => s.ratios?.length === 1 && s.ratios[0].value === 'adaptive')
@@ -980,6 +987,13 @@ modelEl.addEventListener('change',syncModels);scenarioEl.addEventListener('chang
   chartSection.id = 'economics-chart-section';
   chartSection.innerHTML = '<h2>套餐金额与效率</h2><div class="chart-tabs" role="tablist" aria-label="套餐比较视图"><button type="button" class="chart-tab active" data-chart-view="pareto">金额与效率</button><button type="button" class="chart-tab" data-chart-view="price">每秒成本排行</button><button type="button" class="chart-tab" data-chart-view="allowance">每月生成时长排行</button></div><div class="chart-toolbar"><label for="economics-metric">比较口径<select id="economics-metric"><option value="efficiency">每元可生成时长 / 总金额</option><option value="cycle-seconds">周期可生成时长 / 总金额</option><option value="monthly">每月可生成时长 / 每月金额</option></select></label><label for="economics-scale">金额显示方式<select id="economics-scale"><option value="log">压缩大额差距（对数）</option><option value="linear">等距金额（线性）</option></select></label><label for="economics-duration-scale">时长显示方式<select id="economics-duration-scale"><option value="sqrt">展开密集区域（平方根）</option><option value="linear">等距时长</option></select></label><button type="button" class="chart-action" id="chart-reset">重置视图</button><div class="chart-legend" aria-label="图例"><span class="chart-key"><i></i>套餐点</span><span class="chart-key"><i class="frontier"></i>高效套餐边界</span><span class="chart-key"><i class="selected"></i>当前所选</span></div></div><div id="chart-panel-pareto" class="chart-panel"><div class="chart-wrap"><div class="chart-tooltip" id="chart-tooltip" role="tooltip" hidden></div><svg id="economics-chart" class="chart-svg" viewBox="0 0 960 500" role="img" aria-label="套餐实付金额与每元可生成时长散点图"></svg></div><p class="note" id="economics-chart-note"></p></div><div id="chart-panel-price" class="chart-panel" hidden><div id="price-ranking" class="ranking-list"></div></div><div id="chart-panel-allowance" class="chart-panel" hidden><div id="allowance-ranking" class="ranking-list"></div></div>';
   const matrixSection = document.querySelector('#resolution-matrix-section');
+  const comparisonFilterNote=document.createElement('p');
+  comparisonFilterNote.id='comparison-filter-note';
+  comparisonFilterNote.className='note comparison-filter-note';
+  comparisonFilterNote.setAttribute('role','status');
+  comparisonFilterNote.setAttribute('aria-live','polite');
+  comparisonFilterNote.hidden=true;
+  chartSection.querySelector('h2').after(comparisonFilterNote);
   const genericPointLegend = chartSection.querySelector('.chart-key');
   if (genericPointLegend) genericPointLegend.outerHTML = uniquePlatforms.map(provider => '<span class="chart-key provider-key" style="' + platformStyle(provider) + '"><i aria-hidden="true"></i>' + esc(provider) + '</span>').join('');
   const comparisonSection = document.querySelector('#plan-comparison-section');
@@ -1057,6 +1071,23 @@ modelEl.addEventListener('change',syncModels);scenarioEl.addEventListener('chang
   const chartPlanBundleLabel=function chartPlanBundleLabel(plan) {
   if (plan.platform !== 'RunningHub') return '';
   return plan.bundle === 'rh-heavy' ? 'RH币多' : plan.bundle === 'balance-heavy' ? '积分多' : '';
+};
+  const comparisonFilterSummary=function comparisonFilterSummary(data, catalog, anchor, platform, explainAvailability) {
+  if (platform) return '当前仅比较 ' + platform + ' 的套餐；切换“全部平台”可查看其他平台。';
+  const group = catalog.getGroup(anchor?.selectionGroupId ?? anchor?.scenarioId ?? anchor?.id);
+  if (!group || !anchor) return '';
+  const platforms = [...new Set(group.sources.map(s => s.platform || 'RunningHub'))];
+  const missing = [];
+  for (const name of platforms) {
+    if (catalog.quotesFor(anchor,name,anchor.resolution,anchor.ratio,anchor).length) continue;
+    const plan = data.planOptions.find(p => (p.platform || 'RunningHub') === name);
+    if (!plan) continue;
+    const reason = explainAvailability(data,catalog,plan,anchor);
+    const text = reason.code === 'RESOLUTION_UNDECLARED' ? '像素分辨率未确认'
+      : reason.code === 'NO_DIMENSION' ? '当前分辨率或画幅没有报价' : reason.message;
+    missing.push(name + '（' + text + '）');
+  }
+  return missing.length ? '“全部平台”仍按所选规格和素材条件筛选。当前未显示：' + missing.join('；') + '。' : '';
 };
   function comparisonRows(plans, anchor) {
     return plans.flatMap(plan=>{
@@ -1633,6 +1664,10 @@ modelEl.addEventListener('change',syncModels);scenarioEl.addEventListener('chang
     pageTabs?.refresh();
     const plan = DATA.planOptions.find(item => item.id === planSelect.value);
     const quote = selected();
+    const filterSummary = comparisonFilterSummary(DATA,COMPARISON,quote,
+      platformSelect.value===ALL_PLATFORMS?null:platformSelect.value,explainQuoteAvailability);
+    comparisonFilterNote.textContent=filterSummary;
+    comparisonFilterNote.hidden=!filterSummary;
     const row = plan && quote ? planPrice(plan, quote) : null;
     renderBillingNote(plan);
     renderPlanComparison(quote);
