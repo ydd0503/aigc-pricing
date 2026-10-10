@@ -1,19 +1,19 @@
 {
   "schemaVersion": 1,
-  "version": "6aceaf3bc9e79b3c",
-  "generatedAt": "2026-10-10T05:55:23.541Z",
-  "sha256": "6aceaf3bc9e79b3c050835231ab255f0c4fcec6abf724c7e418e8458f5c05b51",
-  "dataset": "releases/6aceaf3bc9e79b3c.json",
-  "release": "releases/6aceaf3bc9e79b3c.json",
+  "version": "b2bf339ad7b5ce29",
+  "generatedAt": "2026-10-10T12:45:36.247Z",
+  "sha256": "b2bf339ad7b5ce29bd00a38b0ba62ef4e62ae9d670812300f37c15995e711c33",
+  "dataset": "releases/b2bf339ad7b5ce29.json",
+  "release": "releases/b2bf339ad7b5ce29.json",
   "counts": {
     "publicPlatformCount": 6,
     "distinctModelChoices": 73,
-    "scenarioCount": 691,
-    "officialModelModeEntries": 691,
-    "requestedRows": 6991,
-    "quotedRows": 6819,
+    "scenarioCount": 695,
+    "officialModelModeEntries": 695,
+    "requestedRows": 7071,
+    "quotedRows": 6929,
     "planOptionCount": 245,
-    "planModelPairCount": 4636
+    "planModelPairCount": 4690
   },
   "sourceDates": [
     "2026-09-23T04:11:40.558Z",
@@ -934,7 +934,6 @@
     "2026-10-01T07:57:17.026Z",
     "2026-10-01T07:57:17.033Z",
     "2026-10-01T07:57:17.041Z",
-    "2026-10-01T07:57:17.049Z",
     "2026-10-01T07:57:17.059Z",
     "2026-10-01T07:57:17.067Z",
     "2026-10-01T07:57:17.074Z",
@@ -2437,6 +2436,17 @@
     "2026-10-10T05:48:17.902Z",
     "2026-10-10T05:48:18.120Z",
     "2026-10-10T05:48:18.200Z",
-    "2026-10-10T05:48:18.416Z"
+    "2026-10-10T05:48:18.416Z",
+    "2026-10-10T12:34:22.779Z",
+    "2026-10-10T12:34:23.000Z",
+    "2026-10-10T12:34:23.188Z",
+    "2026-10-10T12:34:23.434Z",
+    "2026-10-10T12:34:23.655Z",
+    "2026-10-10T12:34:23.875Z",
+    "2026-10-10T12:34:24.063Z",
+    "2026-10-10T12:34:24.282Z",
+    "2026-10-10T12:34:24.483Z",
+    "2026-10-10T12:34:24.670Z",
+    "2026-10-10T12:43:48.198Z"
   ]
 }
