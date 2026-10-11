@@ -1,4 +1,6 @@
 site/
+site-*-check/
+site.staging-*/
 node_modules/
 *.tmp
 .local/

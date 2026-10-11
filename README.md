@@ -6,7 +6,9 @@ AI 视频生成平台统一度量衡。比较相同底模、生成条件和规�
 
 ## 在线查看
 
-GitHub Pages 配置完成后： https://ydd0503.github.io/aigc-pricing/
+GitHub Pages 备份： https://ydd0503.github.io/aigc-pricing/
+
+主站地址和生产分支以 `deploy-config.json` 中已核实的配置为准。两站的 `version.json` 记录实际源提交、公开数据版本和构建时间；页脚显示对应版本。
 
 ## 在其他电脑查看
 
@@ -14,9 +16,18 @@ GitHub Pages 配置完成后： https://ydd0503.github.io/aigc-pricing/
 
 ## 部署到服务器
 
-本仓库就是可交付静态站点，不需要原项目的本地档案。把 index.html、data-version.json、LICENSE 和 repository-stats.json 上传到 Nginx 网页目录即可；需要提供公开数据下载时同时上传 data 目录。也可以在静态托管平台选择无框架、不执行构建、输出目录为仓库根目录。
+本仓库就是可交付静态站点，不需要原项目的本地档案。发布脚本只使用本仓库的公开快照，无第三方包依赖，不调用平台采集接口。需要构建时使用 Node.js 22 或更新的兼容版本。
 
-GitHub Pages 使用仓库内的自动部署流程；在 Settings → Pages 将部署来源设为 GitHub Actions。
+| 平台 | 构建命令 | 输出目录 | 页面路径 |
+| --- | --- | --- | --- |
+| Cloudflare Pages | `node scripts/build_static_site.mjs --platform cloudflare` | `site` | `/` |
+| GitHub Pages | `node scripts/build_static_site.mjs --platform github` | `site` | `/aigc-pricing/` |
+
+Cloudflare Pages 采用原生 Git 集成，仓库根目录、无框架、生产分支 `main`；设置 `SKIP_DEPENDENCY_INSTALL=1`，无需安装依赖或另建部署令牌。其他分支供预览使用。只发布 `site`，不要上传整个仓库或私有采集工作区。
+
+自建 Nginx 也可以托管构建后的 `site` 内容。若使用不同目录前缀，需调整并验证路径。不存在的页面和数据地址应返回 404，不能将缺失 JSON 当成首页返回。
+
+GitHub Pages 复用仓库内唯一的自动部署流程；在 Settings → Pages 将部署来源设为 GitHub Actions。提交到 `main` 会触发两平台分别构建；不需要在 Actions 再部署 Cloudflare。没有配置自定义域名或付费服务。
 
 ## 更新与边界
 
@@ -42,7 +53,7 @@ GitHub Pages 使用仓库内的自动部署流程；在 Settings → Pages 将�
 
 Star 读取 GitHub 官方 `stargazers_count`。页面先显示已核对的公开数量，再独立请求实时值；网络失败、离线打开或浏览器存储被禁用时仍显示最近核对记录，悬停可查看核对时间。缓存不会阻止实时刷新。
 
-GitHub Pages 每次发布及每小时尝试更新 repository-stats.json 和页面内的备用数字；调度可能延迟，长期不活动的公开仓库可能暂停定时任务。下载版保留下载时的核对记录，有网络时仍尝试读取实时值。公开脚本 scripts/refresh_repository_stats.mjs 只读取 GitHub 仓库元数据，不包含任何视频平台采集或账户访问。工作流的临时 GitHub 令牌只在服务端用于读取本仓库元数据，输出仅保留仓库名、数量和核对时间。
+GitHub Pages 每次发布及每小时尝试更新 repository-stats.json 和页面内的备用数字；调度可能延迟，长期不活动的公开仓库可能暂停定时任务。该调度不提交源码，也不触发 Cloudflare 重建；Cloudflare 静态备用记录随源码发布更新，页面仍会独立尝试读取实时数值。下载版保留下载时的核对记录，有网络时仍尝试读取实时值。公开脚本 scripts/refresh_repository_stats.mjs 只读取 GitHub 仓库元数据，不包含任何视频平台采集或账户访问。工作流的临时 GitHub 令牌只在服务端用于读取本仓库元数据，输出仅保留仓库名、数量和核对时间。
 
 ## 许可
 

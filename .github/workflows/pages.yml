@@ -25,10 +25,7 @@ jobs:
           persist-credentials: false
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
       - name: Prepare the static website
-        run: |
-          mkdir -p site
-          cp index.html data-version.json LICENSE .nojekyll repository-stats.json site/
-          cp -R data site/data
+        run: node scripts/build_static_site.mjs --platform github
       - name: Refresh public GitHub Star count
         continue-on-error: true
         env:
