@@ -2,6 +2,6 @@
   "schemaVersion": 1,
   "repository": "https://github.com/ydd0503/aigc-pricing",
   "productionBranch": "main",
-  "cloudflare": { "projectName": null, "url": null, "basePath": "/" },
+  "cloudflare": { "projectName": "aigc-pricing", "url": "https://aigc-pricing.pages.dev/", "basePath": "/" },
   "github": { "url": "https://ydd0503.github.io/aigc-pricing/", "basePath": "/aigc-pricing/" }
 }

@@ -6,6 +6,8 @@ AI 视频生成平台统一度量衡。比较相同底模、生成条件和规�
 
 ## 在线查看
 
+Cloudflare Pages 主站： https://aigc-pricing.pages.dev/
+
 GitHub Pages 备份： https://ydd0503.github.io/aigc-pricing/
 
 主站地址和生产分支以 `deploy-config.json` 中已核实的配置为准。两站的 `version.json` 记录实际源提交、公开数据版本和构建时间；页脚显示对应版本。
